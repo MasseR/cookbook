@@ -39,8 +39,16 @@ updateModel = \case
   SayHelloWorld -> scheduleIO_ (consoleLog "Hello world")
 
 viewModel :: Model -> View Action
-viewModel x = div_ [] [
-    button_ [ onClick AddOne ] [ text "+" ]
-  , text . ms $ x ^. counter
-  , button_ [ onClick SubtractOne ] [ text "-" ]
+viewModel x = section_ [class_ "section"] [
+      link_ [ rel_ "stylesheet", type_ "text/css", href_ bulma ]
+    , script_ [ defer_ "", src_ fontawesome ] []
+    , div_ [class_ "container"] [
+        h1_ [ class_ "title"] [ text "Hello world" ]
+      , button_ [ onClick AddOne ] [ text "+" ]
+      , text . ms $ x ^. counter
+      , button_ [ onClick SubtractOne ] [ text "-" ]
+      ]
   ]
+  where
+    bulma = "https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+    fontawesome = "https://use.fontawesome.com/releases/v5.3.1/js/all.js"
