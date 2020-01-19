@@ -17,15 +17,14 @@ module Data.Ingredient
   )
   where
 
+import           Control.Lens    (lens)
 import qualified Data.Map.Strict as M
-import Data.Semigroup (Last(..))
+import           Data.Name       (HasName (name), Name)
+import           Data.Semigroup  (Last (..))
 
 -- XXX: Think of a way to represent the units
 newtype Unit = Unit Text
   deriving (Eq)
-
--- | Name of the ingredient
-newtype Name = Name Text deriving (Eq, Ord, Show)
 
 -- | Amount
 newtype Amount = Amount Double deriving (Eq, Ord, Show, Num)
@@ -33,10 +32,13 @@ newtype Amount = Amount Double deriving (Eq, Ord, Show, Num)
 
 -- | The specific ingredient
 data Ingredient
-  = Ingredient { name   :: Name
-               , amount :: Amount
-               , unit   :: Unit }
+  = Ingredient { _ingredientName   :: Name
+               , _ingredientAmount :: Amount
+               , _ingredientUnit   :: Unit }
   deriving (Eq)
+
+instance HasName Ingredient where
+  name = lens _ingredientName (\x n -> x{_ingredientName=n})
 
 -- | A collection of ingredients
 --

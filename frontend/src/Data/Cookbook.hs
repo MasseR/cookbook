@@ -14,6 +14,9 @@ module Data.Cookbook where
 import           Data.Ingredient
 import           Data.Recipe
 
+import Data.Name
+import Control.Lens (lens)
+
 -- | A diary is a collection of recipes
 --
 -- Each time you implement a recipe you should keep a diary of your amendments and notes
@@ -26,11 +29,14 @@ data Diary = Diary { date   :: !Day
 --
 -- A food is something like 'karjalanpaisti' which contains one or more recipes.
 data Food
-  = Food { name    :: Text -- ^ Name of the food
-         , recipes :: [Diary]
+  = Food { _foodName    :: !Name -- ^ Name of the food
+         , _foodRecipes :: [Diary]
          }
   deriving (Eq)
 
+instance HasName Food where
+  name = lens _foodName (\x n -> x{_foodName=n})
+
 -- | A cookbook is a collection of different foods
 newtype Cookbook
-  = Cookbook ( Map Text Food )
+  = Cookbook ( Map Name Food )

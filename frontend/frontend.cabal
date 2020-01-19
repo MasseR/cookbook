@@ -28,6 +28,7 @@ library
   import:              shared-properties
   exposed-modules:     MyLib
                      , Data.Recipe
+                     , Data.Name
                      , Data.Cookbook
                      , Data.Doc
                      , Data.Ingredient
