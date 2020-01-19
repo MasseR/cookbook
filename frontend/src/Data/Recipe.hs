@@ -20,10 +20,10 @@ import           Data.Doc (Doc)
 
 -- Try to model the data
 
-data Recipe m a
-  = Recipe { ingredients  :: m a
+data Recipe a
+  = Recipe { ingredients  :: a
            , instructions :: Doc
            }
 
-instance (Semigroup (m a)) => Semigroup (Recipe m a) where
+instance (Semigroup a) => Semigroup (Recipe a) where
   Recipe a b <> Recipe a' b' = Recipe (a <> a') (b <> b')
