@@ -24,6 +24,7 @@ data Recipe a
   = Recipe { ingredients  :: a
            , instructions :: Doc
            }
+  deriving (Eq)
 
 instance (Semigroup a) => Semigroup (Recipe a) where
   Recipe a b <> Recipe a' b' = Recipe (a <> a') (b <> b')

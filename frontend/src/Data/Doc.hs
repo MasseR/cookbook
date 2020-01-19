@@ -38,9 +38,12 @@ data DocF f
   = Nil
   | Content !Text f
   | Line !Int f
-  deriving Functor
+  deriving (Functor, Eq)
 
 type Doc = Fix DocF
+
+instance Eq Doc where
+  Fix a == Fix b = a == b
 
 instance IsString Doc where
   fromString x = text (T.pack x)

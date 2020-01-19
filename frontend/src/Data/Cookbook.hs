@@ -17,17 +17,19 @@ import           Data.Recipe
 -- | A diary is a collection of recipes
 --
 -- Each time you implement a recipe you should keep a diary of your amendments and notes
-data Diary = Diary { date   :: Day
+data Diary = Diary { date   :: !Day
                    , recipe :: Recipe Ingredients
                    }
+  deriving (Eq)
 
 -- | A food is a single food
 --
 -- A food is something like 'karjalanpaisti' which contains one or more recipes.
 data Food
   = Food { name    :: Text -- ^ Name of the food
-         , recipes :: Diary
+         , recipes :: [Diary]
          }
+  deriving (Eq)
 
 -- | A cookbook is a collection of different foods
 newtype Cookbook

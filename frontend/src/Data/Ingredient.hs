@@ -21,7 +21,8 @@ import qualified Data.Map.Strict as M
 import Data.Semigroup (Last(..))
 
 -- XXX: Think of a way to represent the units
-data Unit
+newtype Unit = Unit Text
+  deriving (Eq)
 
 -- | Name of the ingredient
 newtype Name = Name Text deriving (Eq, Ord, Show)
@@ -35,11 +36,13 @@ data Ingredient
   = Ingredient { name   :: Name
                , amount :: Amount
                , unit   :: Unit }
+  deriving (Eq)
 
 -- | A collection of ingredients
 --
 -- If there are multiple ingredients of the same type, the last one will win
 newtype Ingredients = Ingredients (Map Name (Last Ingredient))
+  deriving (Eq)
 
 -- | Create a list with a single ingredient
 singleton :: Name -> Amount -> Unit -> Ingredients
