@@ -44,14 +44,6 @@ defaultMain = startApp App {..}
     subs = []
     mountPoint = Nothing
 
--- From brick
-handleEventLensed :: model -> Lens' model inner -> (inneraction -> action) -> (inneraction -> inner -> Effect inneraction inner) -> inneraction -> Effect action model
-handleEventLensed v target evtarget handleEvent event = first evtarget $ do
-  newB <- handleEvent event (v ^. target)
-  noEff (v & target .~ newB)
-
-viewLensed :: model -> Lens' model inner -> (inneraction -> action) -> (inner -> View inneraction) -> View action
-viewLensed v target evtarget handleView = fmap evtarget (handleView (v ^. target))
 
 updateModel :: Action -> Model -> Effect Action Model
 updateModel event model =
@@ -78,3 +70,39 @@ viewModel x = section_ [class_ "section"] [
     bulma = "https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
     fontawesome = "https://use.fontawesome.com/releases/v5.3.1/js/all.js"
 
+
+-- A way of having self-contained components / widgets
+-- Each component has their own state which can't leak outside.
+--
+-- Idea taken from brick
+
+
+
+-- | Handle an event with the help of a lens
+--
+-- Given a lens into a model and an action wrapper, this function can fully encapsulate an inner state
+--
+-- @
+-- FoodAction event -> handleEventLensed model food FoodAction Food.updateModel event
+-- @
+handleEventLensed
+  :: model -- ^ The model
+  -> Lens' model inner -- ^ The lens into the component view of the model
+  -> (inneraction -> action) -- ^ The wrapping function from the inner action into the outer action
+  -> (inneraction -> inner -> Effect inneraction inner) -- ^ Event handler. It only sees the inner model and action
+  -> inneraction -- ^ The inner action
+  -> Effect action model -- ^ Fully wrapped effect
+handleEventLensed v target evtarget handleEvent event = first evtarget $ do
+  newB <- handleEvent event (v ^. target)
+  noEff (v & target .~ newB)
+
+-- | Incorporate a view with the help of a lens
+--
+-- Given a lens into a model and an action wrapper, this function can fully encapsulate an inner state
+viewLensed
+  :: model -- ^ The model
+  -> Lens' model inner -- ^ The lens into the component view of the model
+  -> (inneraction -> action) -- ^ The wrapping function from the inner action into the outer action
+  -> (inner -> View inneraction) -- ^ The inner view function
+  -> View action
+viewLensed v target evtarget handleView = fmap evtarget (handleView (v ^. target))
