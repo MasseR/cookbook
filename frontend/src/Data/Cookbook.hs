@@ -14,16 +14,19 @@ module Data.Cookbook where
 import           Data.Ingredient
 import           Data.Recipe
 
-import Data.Name
-import Control.Lens (lens)
+import           Control.Lens    (Lens', lens)
+import           Data.Name
 
 -- | A diary is a collection of recipes
 --
 -- Each time you implement a recipe you should keep a diary of your amendments and notes
-data Diary = Diary { date   :: !Day
-                   , recipe :: Recipe Ingredients
+data Diary = Diary { _date   :: !Day
+                   , _recipe :: Recipe Ingredients
                    }
   deriving (Eq)
+
+recipe :: Lens' Diary (Recipe Ingredients)
+recipe = lens _recipe (\d r -> d{_recipe=r})
 
 -- | A food is a single food
 --

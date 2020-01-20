@@ -13,18 +13,27 @@ A recipe is a list of ingredients and instructions
 -}
 module Data.Recipe
   ( Recipe(..)
+  , ingredients
   )
   where
 
 import           Data.Doc (Doc)
 
+import Control.Lens (Lens', lens)
+
 -- Try to model the data
 
 data Recipe a
-  = Recipe { ingredients  :: a
-           , instructions :: Doc
+  = Recipe { _ingredients  :: a
+           , _instructions :: Doc
            }
   deriving (Eq)
 
+ingredients :: Lens' (Recipe a) a
+ingredients = lens _ingredients (\r i -> r{_ingredients = i})
+
 instance (Semigroup a) => Semigroup (Recipe a) where
   Recipe a b <> Recipe a' b' = Recipe (a <> a') (b <> b')
+
+instance Monoid a => Monoid (Recipe a) where
+  mempty = Recipe mempty mempty
